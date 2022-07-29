@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://code.jquery.com/jquey-latest.min.js"></script>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="/static/css/index.css">
-  <title>TodoList</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+
+    <title>TodoList</title>
+
 </head>
 <body>
     <div id="container">
@@ -15,36 +20,37 @@
 
         </header>
         <main>
-            <article>
-              <section>
-                  <div>
-                      <div class="type-select-box">
-                          <div class="selected">All</div>
-                          <ul style="display: none">
-                              <li>Importance</li>
-                              <li>Importance</li>
-                              <li>Importance</li>
-                          </ul>
-                      </div>
-                  </div>
-                  <div>
-                     남은 할일 카운트
-                  </div>
-                </section>
-              <section>
-                <ul>
-                  <li>
-                    <input type="checkbox" name="" id="">
-                    <div></div>
-                    <input type="text" style="display: none;">
-                    <div>삭제</div>
-                  </li>
+            <section class="section-header">
+                <div class="type-select-box">
+                    <div class="selected-type">ALL</div>
+                    <div class="selected-type-button">
+                        <i class="fa-solid fa-caret-down"></i>
+                    </div>
+                </div>
+                <ul class="type-select-box-list">
+                    <li class="type-select">ALL</li>
+                    <li>Importance</li>
+                    <li>Complete</li>
+                    <li>Incomplete</li>
                 </ul>
-                <div>추가 버튼</div>
-              </section>
-            </article>
+                
+                <div class="incomplete-count-text">
+                    완료하지 않은 일 : <span class="incomplete-count-number"> 14</span>
+                </div>
+            </section>
+            <section class="section-body">
+                <ul class="todo-content-list">
+                    <li class="todo-content">
+                        <input type="checkbox" id="complete-check">
+                        <label for="complete-check"></label>
+                        <div>오늘의 할 일</div>
+                        <input type="text" style="display: none;">
+                        <div class="trash-button"><i class="fa-solid fa-trash"></i></div>
+                    </li>
+                </ul>
+                <div class="todo-add-button"><i class="fa-solid fa-plus"></i></div>
+            </section>
         </main>
-
-      </div>
+    </div>
 </body>
 </html>
