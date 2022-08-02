@@ -30,64 +30,67 @@ public class TodoController {
 	private final TodoService todoService;
 	
 	@GetMapping("/list/{type}")
-	public ResponseEntity<?> getTodoList(@PathVariable String type,@RequestParam int page, @RequestParam int contentCount){
+	public ResponseEntity<?> getTodoList(@PathVariable String type, @RequestParam int page, @RequestParam int contentCount) {
 		List<TodoListRespDto> list = null;
 		try {
 			list = todoService.getTodoList(type, page, contentCount);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, page + "page list on load faild", list));
+			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, page + "page list on load failed", list));
 		}
 		return ResponseEntity.ok().body(new CMRespDto<>(1, page + "page list success to load", list));
 	}
 	
-	
-	
 	@PostMapping("/todo")
-	public ResponseEntity<?> addTodo(@RequestBody CreateTodoReqDto createTodoReqDto){
+	public ResponseEntity<?> addTodo(@RequestBody CreateTodoReqDto createTodoReqDto) {
 		try {
-			todoService.createTodo(createTodoReqDto);
+			if(!todoService.createTodo(createTodoReqDto)) {
+				throw new RuntimeException("DataBase Error");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1 , "Adding todo faild" , createTodoReqDto));
+			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, "Adding todo failed", createTodoReqDto));
 		}
-		return ResponseEntity.ok().body(new CMRespDto<>(1 , "Adding todo success" , createTodoReqDto));
+		return ResponseEntity.ok().body(new CMRespDto<>(1, "success", createTodoReqDto));
 	}
+	
 	@PutMapping("/complete/todo/{todoCode}")
-	public ResponseEntity<?> setcompleteTodo(@PathVariable int todoCode){
+	public ResponseEntity<?> setCompleteTodo(@PathVariable int todoCode) {
 		boolean status = false;
 		try {
 			status = todoService.updateTodoComplete(todoCode);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1 , "faild" ,status));
+			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, "failed", status));
 		}
-		return ResponseEntity.ok().body(new CMRespDto<>(1 , "success" ,status));
+		return ResponseEntity.ok().body(new CMRespDto<>(1, "success", status));
 	}
 	
 	@PutMapping("/importance/todo/{todoCode}")
-	public ResponseEntity<?> setImportanceTodo(@PathVariable int todoCode){
+	public ResponseEntity<?> setImportanceTodo(@PathVariable int todoCode) {
 		boolean status = false;
 		try {
 			status = todoService.updateTodoImportance(todoCode);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1 , "faild" ,status));
+			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, "failed", status));
 		}
-		return ResponseEntity.ok().body(new CMRespDto<>(1 , "success" ,status));
+		return ResponseEntity.ok().body(new CMRespDto<>(1, "success", status));
 	}
+	
 	@PutMapping("/todo/{todoCode}")
-	public ResponseEntity<?> setTodo(@PathVariable int todoCode, @RequestBody UpdateTodoReqDto updateTodoReqDto){
+	public ResponseEntity<?> setTodo(@PathVariable int todoCode, @RequestBody UpdateTodoReqDto updateTodoReqDto) {
 		boolean status = false;
 		try {
 			updateTodoReqDto.setTodoCode(todoCode);
 			status = todoService.updateTodo(updateTodoReqDto);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1 , "faild" ,status));
+			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, "failed", status));
 		}
-		return ResponseEntity.ok().body(new CMRespDto<>(1 , "success" ,status));
+		return ResponseEntity.ok().body(new CMRespDto<>(1, "success", status));
 	}
+	
 	@DeleteMapping("/todo/{todoCode}")
 	public ResponseEntity<?> removeTodo(@PathVariable int todoCode){
 		boolean status = false;
@@ -95,8 +98,10 @@ public class TodoController {
 			status = todoService.removeTodo(todoCode);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1 , "faild" ,status));
+			return ResponseEntity.internalServerError().body(new CMRespDto<>(-1, "failed", status));
 		}
-		return ResponseEntity.ok().body(new CMRespDto<>(1 , "success" ,status));
+		return ResponseEntity.ok().body(new CMRespDto<>(1, "success", status));
 	}
 }
+
+

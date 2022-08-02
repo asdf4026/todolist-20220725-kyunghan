@@ -5,7 +5,7 @@
   
 <mapper namespace="com.kyunghan.todolist.domain.todo.TodoRepository">
 	<insert id="save" parameterType="com.kyunghan.todolist.domain.todo.Todo">
-		insert into
+				insert into
 			todo_mst
 		values(
 			0,
@@ -14,8 +14,9 @@
 			#{importance_flag},
 			now(),
 			now()
-			)
+		)
 	</insert>
+	
 	<select id="getTodoList" parameterType="hashmap" resultType="com.kyunghan.todolist.domain.todo.Todo">
 		select
 			tm.todo_code,
@@ -29,30 +30,31 @@
 			
 			tm.create_date,
 			tm.update_date
+			
 		from
 			todo_mst tm
-			LEFT OUTER JOIN 	(select
-								COUNT(*) AS total_count
-							from
-								todo_mst
-							where
-							<choose>
-								<when test='type.equals("importance")'>
-									importance_flag = 1
-								</when>
-								<when test='type.equals("complete")'>
-									todo_complete = 1
-								</when>
-								<when test='type.equals("incomplete")'>
-									todo_complete = 0
-								</when>
-								<otherwise>
-									1 = 1
-								</otherwise>
-							</choose>
-							
-								) tt ON (1 = 1)
-		LEFT OUTER JOIN (select
+			LEFT OUTER JOIN (select
+											COUNT(*) AS total_count
+										FROM
+											todo_mst
+										where
+										<choose>
+											<when test='type.equals("importance")'>
+												importance_flag = 1
+											</when>
+											<when test='type.equals("complete")'>
+												todo_complete = 1
+											</when>
+											<when test='type.equals("incomplete")'>
+												todo_complete = 0
+											</when>
+											<otherwise>
+												1 = 1
+											</otherwise>
+										</choose>
+											
+											) tt ON (1 = 1)
+			LEFT OUTER JOIN (select
 								COUNT(todo_complete) AS incomplete_count
 							from
 								todo_mst
@@ -77,7 +79,6 @@
 					1 = 1
 				</otherwise>
 			</choose>
-			
 		order by
 			todo_code desc
 		limit #{index}, #{count}
@@ -85,21 +86,23 @@
 	
 	
 	<update id="updateTodoComplete" parameterType="Integer">
-		UPDATE
+		UPDATE 
 			todo_mst
 		SET
-			todo_complete = case when todo_complete =  '0' then 1 ELSE 0 end
+			todo_complete = CASE WHEN todo_complete = '0' THEN 1 ELSE 0 END
 		WHERE
 			todo_code = #{todo_code}
+		
 	</update>
 	
 	<update id="updateTodoImportance" parameterType="Integer">
-		UPDATE
+		UPDATE 
 			todo_mst
 		SET
-			Importance_flag = case when Importance_flag =  '0' then 1 ELSE 0 end
+			importance_flag = CASE WHEN importance_flag = '0' THEN 1 ELSE 0 END
 		WHERE
 			todo_code = #{todo_code}
+		
 	</update>
 	
 	<update id="updateTodoByTodoCode" parameterType="com.kyunghan.todolist.domain.todo.Todo">
@@ -110,8 +113,9 @@
 			
 			update_date = now()
 		where
-			todo_code = #{todo_code}
+			todo_code = #{todo_code}	
 	</update>
+	
 	<delete id="remove" parameterType="Integer">
 		delete
 		from
@@ -120,6 +124,9 @@
 			todo_code = #{todo_code}
 	</delete>
 </mapper>
+  
+  
+  
   
   
   
