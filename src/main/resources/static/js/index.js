@@ -4,7 +4,8 @@ const typeSelectBoxListLis = typeSelectBoxList.querySelectorAll("li");
 const todoContentList = document.querySelector(".todo-content-list");
 const sectionBoby = document.querySelector(".section-body");
 const incompleteCountNumber = document.querySelector(".incomplete-count-number");
-
+const modalContainer = document.querySelector(".modal-container");
+const todoAddButton = document.querySelector(".todo-add-button");
 /*
 	게시글 불러오기
 	
@@ -261,6 +262,45 @@ for(let i = 0; i < typeSelectBoxListLis.length; i++){
 	
 }
 
+todoAddButton.onclick = () => {
+  modalContaier.classList.toggle("modal-visible");
+  todoContentList.style.overflow = "hidden";
+  setModalEvent();
+}
+
+function clearModalTodoInputValue(){
+  modalInput.value ="";
+}
+
+function setModalEvent(){
+  const modalCloseButton = modalContainer.querySelector(".modal-close-button");
+  const importanceFlag = modalContainer.querySelector(".importance-check");
+  const modalTodoInput = modalContainer.querySelector(".modal-todo-input");
+  const modalCommitButton = modalContainer.querySelector(".modal-commit-button");
+  
+  modalContainer.onclick = (e) => {
+    if(e.target == modalContainer){
+      modalCloseButton.click();
+    }
+  }
+  
+  
+  modalCloseButton.onclick = () => {
+    modalContainer.classList.toggle("modal-visible");
+    todoContentList.style.overflow = "auto";
+    clearModalTodoInputValue(modalTodoInput);
+  }
+  
+  modalCommitButton.onclick = () => {
+	data = {
+		importance: importanceFlag.checked,
+		todo: modalTodoInput.value
+	}
+	addTodo(data);
+	modalCloseButton.click();
+	}
+}
+
 ///////////////////////////////////////////<<< REQUEST >>>//////////////////////////////////////////////////
 
 function load() {
@@ -321,8 +361,6 @@ function updateStatus(type, todoCode) {
 	return result;
 }
 
-
-
 function deleteTodo(todoContent, todoCode) {
 	$.ajax({
 		type: "delete",
@@ -338,10 +376,26 @@ function deleteTodo(todoContent, todoCode) {
 	})
 }
 
+function addTodo(todo){
+	$.ajax({
+		type: "post",
+		url: "/apl/v1/todolist/todo",
+		contentType: "application/json",
+		data: JSON.stringify(),
+		async: false,
+		dataType: "json",
+		success: (response)=>{
+			if(response.data){
+				clearTodoContentList();
+			}
+		},
+	error: errorMessage
+	})
+}
+
 function errorMessage(request, status, error) {
 	alert("요청 실패");
 	console.log(request.status);
 	console.log(request.responseText);
 	console.log(error);
 }
-
